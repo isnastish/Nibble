@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/gorilla/mux"
+
 	"github.com/isnastish/nibble/pkg/ipresolver"
 	"github.com/isnastish/nibble/pkg/log"
 )
@@ -19,11 +21,18 @@ type Server struct {
 
 func NewServer(port int) (*Server, error) {
 	// TODO: Create http server
+	router := mux.NewRouter()
+	_ = router
+
+	http.HandleFunc("/hello", helloRoute)
+
 	return &Server{}, nil
 }
 
 func (s *Server) Serve() error {
 	log.Logger.Info("Listening on port 3030")
+
+	// TODO: Bind endpoints here or on the server creation?
 
 	if err := http.ListenAndServe(":3030", nil); err != http.ErrServerClosed {
 		// TODO: More robust error message
