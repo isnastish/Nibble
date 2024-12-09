@@ -1,9 +1,11 @@
 package validator
 
-func ValidateUserPassword() bool {
+// TODO: Use regexp
+
+func ValidateUserPassword(pwd string) bool {
 	return false
 }
 
-func ValidateUserEmailAddress() bool {
+func ValidateUserEmailAddress(email string) bool {
 	return false
 }
