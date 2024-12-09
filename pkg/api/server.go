@@ -1,8 +1,10 @@
 package api
 
 import (
+	"context"
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/gorilla/mux"
 
@@ -55,8 +57,16 @@ func (s *Server) Serve() error {
 }
 
 func (s *Server) Shutdown() error {
-	// Close db connection
-	s.db.Close()
+	// Close db connection, should we handle errors - Nah :)?
+	defer s.db.Close()
+
 	// Shutdown the http server
+	ctx, cancel := context.WithTimeout(context.Background(), 3000*time.Millisecond)
+	defer cancel()
+
+	if err := s.Server.Shutdown(ctx); err != nil {
+		return fmt.Errorf("Failed to shutdown the server: %s", err.Error())
+	}
+
 	return nil
 }

@@ -16,10 +16,17 @@ func main() {
 		log.Logger.Fatal("Faied to create api server: %s", err.Error())
 	}
 
+	waitForGracefulShutdown := make(chan bool, 1)
+
 	go func() {
+		defer close(waitForGracefulShutdown)
+
 		// TODO: Pass port to Serve or NewServer?
 		if err := apiServer.Serve(); err != nil {
 			log.Logger.Fatal("Failed to server: %s", err.Error())
 		}
 	}()
+
+	apiServer.Shutdown() // closes db connection
+	<-waitForGracefulShutdown
 }

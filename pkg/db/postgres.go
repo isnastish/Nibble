@@ -20,6 +20,6 @@ func (db *PostgresDB) createTables() {
 }
 
 // TODO: Close database connection
-func (db *PostgresDB) Close() {
-
+func (db *PostgresDB) Close() error {
+	return nil
 }
