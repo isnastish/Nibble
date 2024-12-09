@@ -23,12 +23,22 @@ type Server struct {
 
 func NewServer(port int) (*Server, error) {
 	// TODO: Create http server
+	db, err := db.NewPostgresDB()
+	if err != nil {
+	}
+
+	server := &Server{
+		db: db,
+	}
+
 	router := mux.NewRouter()
-	_ = router
 
-	http.HandleFunc("/hello", helloRoute)
+	// add logging middleware
+	router.Use(loggingMiddleware)
 
-	return &Server{}, nil
+	http.HandleFunc("/hello", server.helloRoute)
+
+	return server, nil
 }
 
 func (s *Server) Serve() error {
@@ -45,5 +55,8 @@ func (s *Server) Serve() error {
 }
 
 func (s *Server) Shutdown() error {
+	// Close db connection
+	s.db.Close()
+	// Shutdown the http server
 	return nil
 }

@@ -5,6 +5,6 @@ import (
 	"net/http"
 )
 
-func helloRoute(respWriter http.ResponseWriter, req *http.Request) {
+func (s *Server) helloRoute(respWriter http.ResponseWriter, req *http.Request) {
 	io.WriteString(respWriter, "Hello world!")
 }
