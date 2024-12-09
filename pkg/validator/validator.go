@@ -1,6 +1,9 @@
 package validator
 
-// NOTE: This could be implemented in terms of functions
+func ValidateUserPassword() bool {
+	return false
+}
 
-type UserDataValidator struct {
+func ValidateUserEmailAddress() bool {
+	return false
 }

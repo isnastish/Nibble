@@ -17,5 +17,4 @@ func main() {
 			log.Logger.Fatal("Failed to server: %s", err.Error())
 		}
 	}()
-
 }
