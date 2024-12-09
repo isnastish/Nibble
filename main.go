@@ -1,9 +1,19 @@
 package main
 
 import (
-	"fmt"
+	"net/http"
+
+	"github.com/isnastish/nibble/pkg/log"
 )
 
+func helloRoute() {
+
+}
+
 func main() {
-	fmt.Println("Hello nibble")
+	log.Logger.Info("Listeing on port %s", ":3030")
+
+	if err := http.ListenAndServe(":3030", nil); err != nil {
+		log.Logger.Fatal("Failed to server on port: %s", ":3030")
+	}
 }
