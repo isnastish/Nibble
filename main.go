@@ -9,17 +9,6 @@ import (
 	"github.com/isnastish/nibble/pkg/log"
 )
 
-type ApiServer struct {
-	*http.Server
-	// ip resolver client
-	// http server
-	// port, addr
-}
-
-func NewApiServer(port int) (*ApiServer, error) {
-	return &ApiServer{}, nil
-}
-
 func helloRoute(respWriter http.ResponseWriter, req *http.Request) {
 	io.WriteString(respWriter, "Hello world!")
 }

@@ -1,4 +1,4 @@
-package ipresolover
+package ipresolver
 
 type Client struct {
 }
