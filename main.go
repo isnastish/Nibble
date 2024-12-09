@@ -4,6 +4,8 @@ import (
 	"io"
 	"net/http"
 
+	"github.com/gorilla/mux"
+
 	"github.com/isnastish/nibble/pkg/log"
 )
 
@@ -12,6 +14,9 @@ func helloRoute(respWriter http.ResponseWriter, req *http.Request) {
 }
 
 func main() {
+	router := mux.NewRouter()
+	_ = router
+
 	http.HandleFunc("/hello", helloRoute)
 
 	log.Logger.Info("Listeing on port %s", ":3030")
