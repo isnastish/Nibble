@@ -6,6 +6,7 @@ import (
 
 	"github.com/gorilla/mux"
 
+	"github.com/isnastish/nibble/pkg/db"
 	"github.com/isnastish/nibble/pkg/ipresolver"
 	"github.com/isnastish/nibble/pkg/log"
 )
@@ -14,8 +15,9 @@ type Server struct {
 	// http server
 	*http.Server
 	// ip resolver client
-	IpResolverClient *ipresolver.Client
+	ipResolverClient *ipresolver.Client
 	// database connector
+	db *db.PostgresDB
 	// port, addr, other settings ...
 }
 
