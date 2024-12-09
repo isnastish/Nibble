@@ -73,7 +73,7 @@ func (s *Server) Shutdown() error {
 	defer cancel()
 
 	if err := s.Server.Shutdown(ctx); err != nil {
-		return fmt.Errorf("failed to shutdown the server: %s", err.Error())
+		return err
 	}
 
 	return nil
