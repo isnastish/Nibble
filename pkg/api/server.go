@@ -51,13 +51,15 @@ func NewServer(port int) (*Server, error) {
 	router.HandleFunc("/signup", server.signupRoute).Methods("POST")
 	router.HandleFunc("/login", server.loginRoute).Methods("POST")
 
+	server.Server.Handler = router
+
 	return server, nil
 }
 
 func (s *Server) Serve() error {
 	log.Logger.Info("Listening on port %d", s.port)
 
-	if err := http.ListenAndServe(":3030", nil); err != http.ErrServerClosed {
+	if err := s.Server.ListenAndServe(); err != http.ErrServerClosed {
 		return fmt.Errorf("Failed to listen")
 	}
 
