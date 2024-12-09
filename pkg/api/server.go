@@ -20,17 +20,26 @@ type Server struct {
 	ipResolverClient *ipresolver.Client
 	// database connector
 	db *db.PostgresDB
-	// port, addr, other settings ...
+	// settings
+	port int
 }
 
 func NewServer(port int) (*Server, error) {
-	// TODO: Create http server
 	db, err := db.NewPostgresDB()
 	if err != nil {
+		return nil, err
+	}
+
+	ipResolverClient, err := ipresolver.NewClient()
+	if err != nil {
+		return nil, err
 	}
 
 	server := &Server{
-		db: db,
+		Server:           &http.Server{Addr: fmt.Sprintf(":%d", port)},
+		ipResolverClient: ipResolverClient,
+		db:               db,
+		port:             port,
 	}
 
 	router := mux.NewRouter()
@@ -38,18 +47,17 @@ func NewServer(port int) (*Server, error) {
 	// add logging middleware
 	router.Use(loggingMiddleware)
 
-	http.HandleFunc("/hello", server.helloRoute)
+	// bind routes
+	router.HandleFunc("/signup", server.signupRoute).Methods("POST")
+	router.HandleFunc("/login", server.loginRoute).Methods("POST")
 
 	return server, nil
 }
 
 func (s *Server) Serve() error {
-	log.Logger.Info("Listening on port 3030")
-
-	// TODO: Bind endpoints here or on the server creation?
+	log.Logger.Info("Listening on port %d", s.port)
 
 	if err := http.ListenAndServe(":3030", nil); err != http.ErrServerClosed {
-		// TODO: More robust error message
 		return fmt.Errorf("Failed to listen")
 	}
 
@@ -57,7 +65,7 @@ func (s *Server) Serve() error {
 }
 
 func (s *Server) Shutdown() error {
-	// Close db connection, should we handle errors - Nah :)?
+	// Close db connection
 	defer s.db.Close()
 
 	// Shutdown the http server
@@ -65,7 +73,7 @@ func (s *Server) Shutdown() error {
 	defer cancel()
 
 	if err := s.Server.Shutdown(ctx); err != nil {
-		return fmt.Errorf("Failed to shutdown the server: %s", err.Error())
+		return fmt.Errorf("failed to shutdown the server: %s", err.Error())
 	}
 
 	return nil
