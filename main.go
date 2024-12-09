@@ -1,12 +1,17 @@
 package main
 
 import (
+	"flag"
+
 	"github.com/isnastish/nibble/pkg/api"
 	"github.com/isnastish/nibble/pkg/log"
 )
 
 func main() {
-	apiServer, err := api.NewServer(3030)
+	port := flag.Int("port", 3030, "Listening port")
+	flag.Parse()
+
+	apiServer, err := api.NewServer(*port)
 	if err != nil {
 		log.Logger.Fatal("Faied to create api server: %s", err.Error())
 	}
