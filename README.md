@@ -20,7 +20,7 @@ curl -X POST http://localhost:3030/signup -d \
  "password": "234324@sd22ad",
  "email": "isnastish@gmail.com"
 }' \
--H "X-Forward-For: 34.21.9.50"
+-H "X-Forwarded-For: 34.21.9.50"
 ```
 **NOTE**: `X-Forwarded-For` header could be omitted, in that case the IP would be deducted from the request URL, and, what's important, a query to an external service for detecting geolocation will fail with an error `RESERVED_IP_ADDRESS`, since `127.0.0.1` is reserved. You can specify any IP address you want with an earlier mentioned header to simulate a real-world example, where clients are geographically distributed all over the world.
 
