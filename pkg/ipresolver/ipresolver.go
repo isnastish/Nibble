@@ -10,6 +10,10 @@ import (
 	"github.com/isnastish/nibble/pkg/log"
 )
 
+// Struct containing IP's geolocation data
+// retrieved from making a request to external service
+// and parsing its response body.
+// It could contain an optional error code and an error message.
 type IpInfo struct {
 	Ip          string `json:"ip"`
 	City        string `json:"city"`
@@ -23,6 +27,8 @@ type IpInfo struct {
 	ErrorMsg  string `json:"error,omitempty"`
 }
 
+// A user facing client for interacting with an external
+// service for resolving geolocation.
 type Client struct {
 	// http client
 	*http.Client
@@ -42,6 +48,10 @@ func NewClient() (*Client, error) {
 	}, nil
 }
 
+// Make a request to an external service `ipflare`: https://www.ipflare.io/
+// Parse its response and retreive geolocation data based on provided
+// ip address.
+// Return an error, if any, otherwise an instance of `IpInfo` containing the necessary information.
 func (c *Client) Resolve(ipAddr string) (*IpInfo, error) {
 	req, err := http.NewRequest("GET", fmt.Sprintf("https://api.ipflare.io/%s", ipAddr), nil)
 	if err != nil {

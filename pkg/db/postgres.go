@@ -13,7 +13,7 @@ import (
 	"github.com/isnastish/nibble/pkg/utils"
 )
 
-// Struct representing Postgres database.
+// Struct representing Postgres database controller.
 type PostgresDB struct {
 	connPool *pgxpool.Pool
 }
