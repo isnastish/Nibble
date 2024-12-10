@@ -25,10 +25,10 @@ type Server struct {
 }
 
 func NewServer(port int) (*Server, error) {
-	// db, err := db.NewPostgresDB()
-	// if err != nil {
-	// 	return nil, err
-	// }
+	db, err := db.NewPostgresDB()
+	if err != nil {
+		return nil, err
+	}
 
 	ipResolverClient, err := ipresolver.NewClient()
 	if err != nil {
@@ -38,8 +38,8 @@ func NewServer(port int) (*Server, error) {
 	server := &Server{
 		Server:           &http.Server{Addr: fmt.Sprintf(":%d", port)},
 		ipResolverClient: ipResolverClient,
-		// db:               db,
-		port: port,
+		db:               db,
+		port:             port,
 	}
 
 	router := mux.NewRouter()
@@ -49,7 +49,7 @@ func NewServer(port int) (*Server, error) {
 
 	// bind routes
 	router.HandleFunc("/signup", server.signupRoute).Methods("POST")
-	router.HandleFunc("/login", server.loginRoute).Methods("POST")
+	router.HandleFunc("/users", server.getUsers).Methods("GET")
 
 	server.Server.Handler = router
 
@@ -68,7 +68,7 @@ func (s *Server) Serve() error {
 
 func (s *Server) Shutdown() error {
 	// Close db connection
-	// defer s.db.Close()
+	defer s.db.Close()
 
 	// Shutdown the http server
 	ctx, cancel := context.WithTimeout(context.Background(), 3000*time.Millisecond)

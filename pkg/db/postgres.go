@@ -5,9 +5,11 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 
 	"github.com/isnastish/nibble/pkg/ipresolver"
+	"github.com/isnastish/nibble/pkg/log"
 	"github.com/isnastish/nibble/pkg/utils"
 )
 
@@ -16,10 +18,13 @@ type PostgresDB struct {
 }
 
 func NewPostgresDB() (*PostgresDB, error) {
-	// POSTGRES_URL=postgresql://postgres:nastish@postgres-db:5432/postgres?sslmode=disable"
 	postgresUrl, set := os.LookupEnv("POSTGRES_URL")
+
+	postgresUrl = "postgres://postgres:password@localhost:5432/postgres?sslmode=disable"
+	set = true
+
 	if !set || postgresUrl == "" {
-		return nil, fmt.Errorf("postgres: POSTGRES_URL is not set")
+		return nil, fmt.Errorf("postgres: postgres_url is not set")
 	}
 
 	config, err := pgxpool.ParseConfig(postgresUrl)
@@ -40,6 +45,8 @@ func NewPostgresDB() (*PostgresDB, error) {
 		return nil, err
 	}
 
+	log.Logger.Info("Successfully connected to postgres database")
+
 	return &postgres, nil
 }
 
@@ -56,8 +63,8 @@ func (db *PostgresDB) createTables() error {
 	query := `CREATE TABLE IF NOT EXISTS "users" (
 		"id" SERIAL, 
 		"first_name" VARCHAR(64) NOT NULL, 
-		"second_name" VARCHAR(64) NOT NULL,
-		"password" CHAR(32) NOT NULL, 
+		"last_name" VARCHAR(64) NOT NULL,
+		"password" CHAR(64) NOT NULL, 
 		"email" VARCHAR(64) NOT NULL UNIQUE,
 		"city" VARCHAR(64) NOT NULL,
 		"country" VARCHAR(64) NOT NULL,
@@ -71,7 +78,8 @@ func (db *PostgresDB) createTables() error {
 	return nil
 }
 
-func (db *PostgresDB) AddUser(firstName, secondName, password, email string, ipInfo *ipresolver.IpInfo) error {
+// TODO: Documentation
+func (db *PostgresDB) AddUser(firstName, lastName, password, email string, ipInfo *ipresolver.IpInfo) error {
 	// NOTE: User data validation should be done in a separate
 	conn, err := db.connPool.Acquire(context.Background())
 	if err != nil {
@@ -81,19 +89,22 @@ func (db *PostgresDB) AddUser(firstName, secondName, password, email string, ipI
 	defer conn.Release()
 
 	query := `INSERT INTO "users" 
-	("first_name", "second_name", "password", "email", "city", "country") 
+	("first_name", "last_name", "password", "email", "city", "country") 
 	values ($1, $2, $3, $4, $5, $6);`
 
 	// Hash the password before putting it into a database
 	hashedPassword := utils.Sha256([]byte(password))
 
-	if _, err := conn.Exec(context.Background(), query, firstName, secondName, hashedPassword, email, ipInfo.City, ipInfo.Country); err != nil {
+	if _, err := conn.Exec(context.Background(), query, firstName, lastName, hashedPassword, email, ipInfo.City, ipInfo.Country); err != nil {
 		return fmt.Errorf("postgres: failed to insert user, error: %s", err.Error())
 	}
+
+	log.Logger.Info("Succefully added user: %s %s, email: %s, city: %s, country: %s to database", firstName, lastName, email, ipInfo.City, ipInfo.Country)
 
 	return nil
 }
 
+// TODO: Documentation
 func (db *PostgresDB) HasUser(email string) (bool, error) {
 	conn, err := db.connPool.Acquire(context.Background())
 	if err != nil {
@@ -102,11 +113,28 @@ func (db *PostgresDB) HasUser(email string) (bool, error) {
 
 	defer conn.Release()
 
+	// check if the user with specified email address already exists
 	query := `SELECT "email" FROM "users" WHERE "email" = ($1);`
-	// row := conn.QueryRow(context.Background(), query, email)
-	_ = query
+	row := conn.QueryRow(context.Background(), query, email)
 
-	return false, nil
+	var result string
+	if err := row.Scan(&result); err != nil {
+		if err == pgx.ErrNoRows {
+			// user doesn't exit
+			return false, nil
+		}
+		return false, fmt.Errorf("postgres: failed to select user, error: %s", err.Error())
+	}
+
+	return true, nil
+}
+
+// TODO: Documentation
+func (db *PostgresDB) GetUsers() {
+	// conn, err := db.connPool.Acquire(context.Background())
+	// if err != nil {
+	// 	return false, err
+	// }
 }
 
 // Close database connection

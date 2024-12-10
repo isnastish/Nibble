@@ -7,7 +7,6 @@ import (
 	"net"
 	"net/http"
 
-	"github.com/isnastish/nibble/pkg/log"
 	"github.com/isnastish/nibble/pkg/validator"
 )
 
@@ -61,15 +60,16 @@ func (s *Server) signupRoute(respWriter http.ResponseWriter, req *http.Request) 
 		}
 	}
 
-	// exists, err := s.db.HasUser(userData.Email)
-	// if err != nil { // 	http.Error(respWriter, err.Error(), http.StatusInternalServerError)
-	// 	return
-	// }
+	exists, err := s.db.HasUser(userData.Email)
+	if err != nil {
+		http.Error(respWriter, err.Error(), http.StatusInternalServerError)
+		return
+	}
 
-	// if exists {
-	// 	http.Error(respWriter, fmt.Sprintf("user with email: %s already exists, try again", userData.Email), http.StatusBadRequest)
-	// 	return
-	// }
+	if exists {
+		http.Error(respWriter, fmt.Sprintf("user with email: %s already exists, try again", userData.Email), http.StatusBadRequest)
+		return
+	}
 
 	ipInfo, err := s.ipResolverClient.Resolve(ip)
 	if err != nil {
@@ -77,22 +77,14 @@ func (s *Server) signupRoute(respWriter http.ResponseWriter, req *http.Request) 
 		return
 	}
 
-	log.Logger.Info("ip info: %v", ipInfo)
-
-	// if err := s.db.AddUser(userData.FirstName, userData.LastName, userData.Password, userData.Email, ipInfo); err != nil {
-	// 	http.Error(respWriter, fmt.Sprintf("failed to add user, error: %s", err.Error()), http.StatusInternalServerError)
-	// 	return
-	// }
+	if err := s.db.AddUser(userData.FirstName, userData.LastName, userData.Password, userData.Email, ipInfo); err != nil {
+		http.Error(respWriter, fmt.Sprintf("failed to add user, error: %s", err.Error()), http.StatusInternalServerError)
+		return
+	}
 
 	respWriter.WriteHeader(http.StatusOK)
 }
 
-func (s *Server) loginRoute(respWriter http.ResponseWriter, req *http.Request) {
-	/*
-		 "Content-Type": application/json
-		 "Body":
-		{
-		}
-	*/
-	io.WriteString(respWriter, "Hello from login route")
+func (s *Server) getUsers(respWriter http.ResponseWriter, req *http.Request) {
+
 }
