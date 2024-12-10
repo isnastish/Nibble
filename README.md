@@ -4,7 +4,7 @@
 In a nutshell, it's a simple API server which accepts user data, makes a request to an external service for detecting user's geolocation based on its IP address, and stores all the information into a Postgres database. I have purchased an API key for this assignment with a limit of 30.000 request per month, so that should be more than enough for our purposes. For more technical overfiew and design documentation please refer to [api_design document](/api_design.md)  
 
 # Running Nibble service
-To boot up a `nibble` service you should have `docker` installed on your machine. When that is done, run `sudo docker compose up --build --force-recreate --no-deps`. That will start one docker container with an actual API service, and another one with Postgres database. All the api keys are cofigured inside `compose.yaml`, so you don't need to do anything. If everything went right, you should see the following logs:
+To boot up a `nibble` service you should have `docker` installed on your machine. When that is done, run `sudo docker compose up`. That will start one docker container with an actual API service, and another one with Postgres database. All the api keys are cofigured inside `compose.yaml`, so you don't need to do anything. If everything went right, you should see the following logs:
 ![Screenshot from 2024-12-10 20-44-08](https://github.com/user-attachments/assets/488e4864-c894-4b81-a290-bdb8a030431e)
 
 
