@@ -16,6 +16,7 @@ type PostgresDB struct {
 }
 
 func NewPostgresDB() (*PostgresDB, error) {
+	// POSTGRES_URL=postgresql://postgres:nastish@postgres-db:5432/postgres?sslmode=disable"
 	postgresUrl, set := os.LookupEnv("POSTGRES_URL")
 	if !set || postgresUrl == "" {
 		return nil, fmt.Errorf("postgres: POSTGRES_URL is not set")
@@ -57,7 +58,7 @@ func (db *PostgresDB) createTables() error {
 		"first_name" VARCHAR(64) NOT NULL, 
 		"second_name" VARCHAR(64) NOT NULL,
 		"password" CHAR(32) NOT NULL, 
-		"email" VARCHAR(64) NOT NULL,
+		"email" VARCHAR(64) NOT NULL UNIQUE,
 		"city" VARCHAR(64) NOT NULL,
 		"country" VARCHAR(64) NOT NULL,
 		PRIMARY KEY("id")
@@ -93,7 +94,18 @@ func (db *PostgresDB) AddUser(firstName, secondName, password, email string, ipI
 	return nil
 }
 
-func (db *PostgresDB) HasUser() (bool, error) {
+func (db *PostgresDB) HasUser(email string) (bool, error) {
+	conn, err := db.connPool.Acquire(context.Background())
+	if err != nil {
+		return false, err
+	}
+
+	defer conn.Release()
+
+	query := `SELECT "email" FROM "users" WHERE "email" = ($1);`
+	// row := conn.QueryRow(context.Background(), query, email)
+	_ = query
+
 	return false, nil
 }
 

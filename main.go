@@ -14,6 +14,8 @@ func main() {
 	port := flag.Int("port", 3030, "Listening port")
 	flag.Parse()
 
+	log.SetupGlobalLogLevel("debug")
+
 	apiServer, err := api.NewServer(*port)
 	if err != nil {
 		log.Logger.Fatal("Faied to create api server: %s", err.Error())
