@@ -54,8 +54,6 @@ func (db *PostgresDB) createTables() error {
 
 	defer conn.Release()
 
-	// we could have devided it into two tables,
-	// but it's not necessary
 	query := `CREATE TABLE IF NOT EXISTS "users" (
 		"id" SERIAL, 
 		"first_name" VARCHAR(64) NOT NULL, 
