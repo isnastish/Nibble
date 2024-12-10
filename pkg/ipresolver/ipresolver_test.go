@@ -69,7 +69,11 @@ func TestResolveIpAddress(t *testing.T) {
 		}
 
 		if ipInfo.Country != testIpAddresses[i].Country {
-			t.Errorf("invalid geolocation data for IP: %s. Expected: %s, got: %s", ipAddr, testIpAddresses[i].Country, ipInfo.Country)
+			t.Errorf("invalid geolocation data for IP: %s. Expected country: %s, got: %s", ipAddr, testIpAddresses[i].Country, ipInfo.Country)
+		}
+
+		if ipInfo.City != testIpAddresses[i].City {
+			t.Errorf("invalid geolocation data for IP: %s. Expected city: %s, got: %s", ipAddr, testIpAddresses[i].City, ipInfo.City)
 		}
 	}
 }
