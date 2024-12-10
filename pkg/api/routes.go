@@ -79,10 +79,10 @@ func (s *Server) signupRoute(respWriter http.ResponseWriter, req *http.Request) 
 
 	log.Logger.Info("ip info: %v", ipInfo)
 
-	// if err := s.db.AddUser(userData.FirstName, userData.LastName, userData.Password, userData.Email, ipInfo); err != nil {
-	// 	http.Error(respWriter, fmt.Sprintf("failed to add user, error: %s", err.Error()), http.StatusInternalServerError)
-	// 	return
-	// }
+	if err := s.db.AddUser(userData.FirstName, userData.LastName, userData.Password, userData.Email, ipInfo); err != nil {
+		http.Error(respWriter, fmt.Sprintf("failed to add user, error: %s", err.Error()), http.StatusInternalServerError)
+		return
+	}
 
 	respWriter.WriteHeader(http.StatusOK)
 }
