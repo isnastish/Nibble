@@ -56,6 +56,10 @@ func NewServer(port int) (*Server, error) {
 	return server, nil
 }
 
+// Start listening for incoming requests.
+// This function should be run in a separate goroutine to
+// prevent blocking the main execution thread.
+// Returns an error if failed to listen on earlier configured port.
 func (s *Server) Serve() error {
 	log.Logger.Info("Listening on port %d", s.port)
 
@@ -66,6 +70,9 @@ func (s *Server) Serve() error {
 	return nil
 }
 
+// Gracefully shutdown the server,
+// by closing database connection first.
+// Returns an error if something goes wrong.
 func (s *Server) Shutdown() error {
 	// Close db connection
 	defer s.db.Close()
