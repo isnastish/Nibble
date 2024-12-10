@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/isnastish/nibble/pkg/log"
 	"github.com/isnastish/nibble/pkg/validator"
 )
 
@@ -43,6 +44,8 @@ func (s *Server) signupRoute(respWriter http.ResponseWriter, req *http.Request) 
 		http.Error(respWriter, err.Error(), http.StatusInternalServerError)
 		return
 	}
+
+	log.Logger.Info("ip info: %v", ipInfo)
 
 	if !validator.ValidateUserPassword(userData.Password) {
 		http.Error(respWriter, "password validation failed", http.StatusInternalServerError)

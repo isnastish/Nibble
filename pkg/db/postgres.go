@@ -56,7 +56,7 @@ func (db *PostgresDB) createTables() error {
 		"id" SERIAL, 
 		"first_name" VARCHAR(64) NOT NULL, 
 		"second_name" VARCHAR(64) NOT NULL,
-		"password" CHAR(64) NOT NULL, 
+		"password" CHAR(32) NOT NULL, 
 		"email" VARCHAR(64) NOT NULL,
 		"city" VARCHAR(64) NOT NULL,
 		"country" VARCHAR(64) NOT NULL,
