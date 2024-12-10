@@ -1,7 +1,8 @@
 # Overview 
+`Nibble` service written in Golang for the following assignment [Nibble Service in Go](https://makeheadway.notion.site/Backend-Engineer-Nibble-15316bdf9fd28052b718d2a1ea8358a5)
 
 # Running Nibble service
-To boot up a `nibble` service you should have `docker` installed on your machine. When that is done, run `sudo docker compose up --build --force-recreate --no-deps`. That will start one docker container with an actual API service and another one with Postgres database. All the api keys are cofigured inside `compose.yaml`, so you don't need to do anything. If everything went right, you should see the logs:
+To boot up a `nibble` service you should have `docker` installed on your machine. When that is done, run `sudo docker compose up --build --force-recreate --no-deps`. That will start one docker container with an actual API service, and another one with Postgres database. All the api keys are cofigured inside `compose.yaml`, so you don't need to do anything. If everything went right, you should see the following logs:
 ![Screenshot from 2024-12-10 20-44-08](https://github.com/user-attachments/assets/488e4864-c894-4b81-a290-bdb8a030431e)
 
 
