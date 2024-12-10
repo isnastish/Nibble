@@ -1,0 +1,7 @@
+README.md
+api_design.md
+.git
+.gitignore
+.dockerignore
+Dockerfile
+compose.yaml

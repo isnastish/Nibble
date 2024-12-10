@@ -1,39 +1,38 @@
 services:
-  # nibble:
-  #   container_name: "nibble-service"
-  #   image: 'nibble:latest'
-  #   build: 
-  #     dockerfile: ./Dockerfile
-  #   ports:
-  #     # Port 8080 is accessible for servier-to-service communication, 
-  #     # and the same port is available for accessing the container from outside the network.
-  #     # locahost has to be specified, otherwise some weird things happening, 
-  #     # only occasionally I can reach the endpoint from outside, using other clients (python for example).
-  #     - "127.0.0.1:3030:3030"
-  #   depends_on:
-  #     postgres-db:
-  #       condition: service_healthy
-  #   environment:
-  #     IPFLARE_API_KEY: "d4815a7185da6aae.69f941c643a3f41f751fcc9ef59dcfcfed08a00fb57907b4e750a4a1cdbffc3a"
-	# POSTGRES_URL: "postgres://postgres:password@postgres-db:5432/postgres?sslmode=disable"
-  #     POSTGRES_URL: "postgresql://postgres:nastish@postgres-db:5432/postgres?sslmode=disable"
-  #   networks:
-  #     - backend
-
-  postgres-db:
-    image: 'postgres:latest'
-    restart: always
-    container_name: "postgres-emulator"
+  nibble:
+    container_name: "nibble"
+    image: 'nibble:latest'
+    build: 
+      dockerfile: ./Dockerfile
     ports:
-      - "5432:5432"
+      # Port 8080 is accessible for servier-to-service communication, 
+      # and the same port is available for accessing the container from outside the network.
+      # locahost has to be specified, otherwise some weird things happening, 
+      # only occasionally I can reach the endpoint from outside, using other clients (python for example).
+      - "127.0.0.1:3030:3030"
+    # depends_on:
+    #   postgres-db:
+    #     condition: service_healthy
     environment:
-      - POSTGRES_PORT=5432
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=password
-      - POSTGRES_DB=postgres
-    command: ["-c", "ssl=off"]
+      IPFLARE_API_KEY: "d4815a7185da6aae.69f941c643a3f41f751fcc9ef59dcfcfed08a00fb57907b4e750a4a1cdbffc3a"
+      POSTGRES_URL: "postgres://postgres:password@postgres-db:5432/postgres?sslmode=disable"
     networks:
       - backend
+
+  # postgres-db:
+  #   image: 'postgres:latest'
+  #   restart: always
+  #   container_name: "postgres-emulator"
+  #   ports:
+  #     - "5432:5432"
+  #   environment:
+  #     - POSTGRES_PORT=5432
+  #     - POSTGRES_USER=postgres
+  #     - POSTGRES_PASSWORD=password
+  #     - POSTGRES_DB=postgres
+  #   command: ["-c", "ssl=off"]
+  #   networks:
+  #     - backend
 
 networks:
   backend:
