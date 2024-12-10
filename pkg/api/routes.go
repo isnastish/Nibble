@@ -71,7 +71,7 @@ func (s *Server) signupRoute(respWriter http.ResponseWriter, req *http.Request) 
 		return
 	}
 
-	respWriter.WriteHeader(http.StatusOK)
+	respWriter.Write([]byte(fmt.Sprintf("Successfully added user: %s", userData.Email)))
 }
 
 func (s *Server) getUsers(respWriter http.ResponseWriter, req *http.Request) {
