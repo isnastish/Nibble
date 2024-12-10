@@ -56,7 +56,7 @@ func (db *PostgresDB) createTables() error {
 		"id" SERIAL, 
 		"first_name" VARCHAR(64) NOT NULL, 
 		"second_name" VARCHAR(64) NOT NULL,
-		"password" CHAR(64) NOT NULL, 
+		"password" CHAR(32) NOT NULL, 
 		"email" VARCHAR(64) NOT NULL,
 		"city" VARCHAR(64) NOT NULL,
 		"country" VARCHAR(64) NOT NULL,
@@ -87,7 +87,7 @@ func (db *PostgresDB) AddUser(firstName, secondName, password, email string, ipI
 	hashedPassword := utils.Sha256([]byte(password))
 
 	if _, err := conn.Exec(context.Background(), query, firstName, secondName, hashedPassword, email, ipInfo.City, ipInfo.Country); err != nil {
-		return fmt.Errorf("postgres: failed insert user, error: %s", err.Error())
+		return fmt.Errorf("postgres: failed to insert user, error: %s", err.Error())
 	}
 
 	return nil
