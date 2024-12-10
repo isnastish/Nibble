@@ -78,6 +78,7 @@ func (db *PostgresDB) createTables() error {
 	return nil
 }
 
+// TODO: Documentation
 func (db *PostgresDB) AddUser(firstName, lastName, password, email string, ipInfo *ipresolver.IpInfo) error {
 	// NOTE: User data validation should be done in a separate
 	conn, err := db.connPool.Acquire(context.Background())
@@ -103,6 +104,7 @@ func (db *PostgresDB) AddUser(firstName, lastName, password, email string, ipInf
 	return nil
 }
 
+// TODO: Documentation
 func (db *PostgresDB) HasUser(email string) (bool, error) {
 	conn, err := db.connPool.Acquire(context.Background())
 	if err != nil {
@@ -125,6 +127,14 @@ func (db *PostgresDB) HasUser(email string) (bool, error) {
 	}
 
 	return true, nil
+}
+
+// TODO: Documentation
+func (db *PostgresDB) GetUsers() {
+	// conn, err := db.connPool.Acquire(context.Background())
+	// if err != nil {
+	// 	return false, err
+	// }
 }
 
 // Close database connection

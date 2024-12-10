@@ -85,12 +85,6 @@ func (s *Server) signupRoute(respWriter http.ResponseWriter, req *http.Request) 
 	respWriter.WriteHeader(http.StatusOK)
 }
 
-func (s *Server) loginRoute(respWriter http.ResponseWriter, req *http.Request) {
-	/*
-		 "Content-Type": application/json
-		 "Body":
-		{
-		}
-	*/
-	io.WriteString(respWriter, "Hello from login route")
+func (s *Server) getUsers(respWriter http.ResponseWriter, req *http.Request) {
+
 }
