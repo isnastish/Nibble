@@ -13,6 +13,9 @@ import (
 	"github.com/isnastish/nibble/pkg/log"
 )
 
+// Server for handling http request.
+// It bundles all the pieces together, the ip resolver client,
+// and postgres client to store user's data in a persistent storage.
 type Server struct {
 	// http server
 	*http.Server
