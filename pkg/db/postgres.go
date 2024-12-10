@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 
 	"github.com/isnastish/nibble/pkg/ipresolver"
@@ -112,10 +113,18 @@ func (db *PostgresDB) HasUser(email string) (bool, error) {
 
 	// check if the user with specified email address already exists
 	query := `SELECT "email" FROM "users" WHERE "email" = ($1);`
-	// row := conn.QueryRow(context.Background(), query, email)
-	_ = query
+	row := conn.QueryRow(context.Background(), query, email)
 
-	return false, nil
+	var result string
+	if err := row.Scan(&result); err != nil {
+		if err == pgx.ErrNoRows {
+			// user doesn't exit
+			return false, nil
+		}
+		return false, fmt.Errorf("postgres: failed to select user, error: %s", err.Error())
+	}
+
+	return true, nil
 }
 
 // Close database connection

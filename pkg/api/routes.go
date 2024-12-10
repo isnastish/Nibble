@@ -60,15 +60,16 @@ func (s *Server) signupRoute(respWriter http.ResponseWriter, req *http.Request) 
 		}
 	}
 
-	// exists, err := s.db.HasUser(userData.Email)
-	// if err != nil { // 	http.Error(respWriter, err.Error(), http.StatusInternalServerError)
-	// 	return
-	// }
+	exists, err := s.db.HasUser(userData.Email)
+	if err != nil {
+		http.Error(respWriter, err.Error(), http.StatusInternalServerError)
+		return
+	}
 
-	// if exists {
-	// 	http.Error(respWriter, fmt.Sprintf("user with email: %s already exists, try again", userData.Email), http.StatusBadRequest)
-	// 	return
-	// }
+	if exists {
+		http.Error(respWriter, fmt.Sprintf("user with email: %s already exists, try again", userData.Email), http.StatusBadRequest)
+		return
+	}
 
 	ipInfo, err := s.ipResolverClient.Resolve(ip)
 	if err != nil {
