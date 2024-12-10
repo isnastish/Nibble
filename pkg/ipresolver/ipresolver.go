@@ -37,14 +37,14 @@ type Client struct {
 }
 
 func NewClient() (*Client, error) {
-	IPFLARE_API_KEY, set := os.LookupEnv("IPFLARE_API_KEY")
-	if !set || IPFLARE_API_KEY == "" {
+	ipflareApiKey, set := os.LookupEnv("IPFLARE_API_KEY")
+	if !set || ipflareApiKey == "" {
 		return nil, fmt.Errorf("IPFLARE_API_KEY is not set")
 	}
 
 	return &Client{
 		Client:        &http.Client{},
-		ipflareApiKey: IPFLARE_API_KEY,
+		ipflareApiKey: ipflareApiKey,
 	}, nil
 }
 
