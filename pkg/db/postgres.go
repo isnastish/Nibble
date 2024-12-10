@@ -19,10 +19,6 @@ type PostgresDB struct {
 
 func NewPostgresDB() (*PostgresDB, error) {
 	postgresUrl, set := os.LookupEnv("POSTGRES_URL")
-
-	postgresUrl = "postgres://postgres:password@localhost:5432/postgres?sslmode=disable"
-	set = true
-
 	if !set || postgresUrl == "" {
 		return nil, fmt.Errorf("postgres: postgres_url is not set")
 	}
