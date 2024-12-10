@@ -40,7 +40,7 @@ func (s *Server) signupRoute(respWriter http.ResponseWriter, req *http.Request) 
 	// Separate IP address from the port
 	ipInfo, err := s.ipResolverClient.Resolve(strings.Split(req.RemoteAddr, ":")[0])
 	if err != nil {
-		http.Error(respWriter)
+		http.Error(respWriter, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
