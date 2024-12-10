@@ -110,6 +110,7 @@ func (db *PostgresDB) HasUser(email string) (bool, error) {
 
 	defer conn.Release()
 
+	// check if the user with specified email address already exists
 	query := `SELECT "email" FROM "users" WHERE "email" = ($1);`
 	// row := conn.QueryRow(context.Background(), query, email)
 	_ = query
