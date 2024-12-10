@@ -114,9 +114,9 @@ func (db *PostgresDB) HasUser(email string) (bool, error) {
 	var result string
 	if err := row.Scan(&result); err != nil {
 		if err == pgx.ErrNoRows {
-			// user doesn't exit
 			return false, nil
 		}
+
 		return false, fmt.Errorf("postgres: failed to select user, error: %s", err.Error())
 	}
 
