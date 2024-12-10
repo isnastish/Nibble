@@ -1,7 +1,6 @@
 package ipresolver
 
 import (
-	"fmt"
 	"testing"
 
 	_ "github.com/stretchr/testify/assert"
@@ -9,34 +8,29 @@ import (
 
 var testIpAddresses = []*IpInfo{
 	{
-		Ip:          "34.21.9.50",
-		City:        "Washington",
-		Country:     "United States",
-		CountryCode: "US",
+		Ip:      "34.21.9.50",
+		City:    "Washington",
+		Country: "United States",
 	},
 	{
-		Ip:          "34.106.208.213",
-		City:        "Salt Lake City",
-		Country:     "United States",
-		CountryCode: "US",
+		Ip:      "34.106.208.213",
+		City:    "Salt Lake City",
+		Country: "United States",
 	},
 	{
-		Ip:          "34.130.107.20",
-		City:        "Toronto",
-		Country:     "Canada",
-		CountryCode: "CA",
+		Ip:      "34.130.107.20",
+		City:    "Toronto",
+		Country: "Canada",
 	},
 	{
-		Ip:          "34.39.131.22",
-		City:        "Sao Paulo",
-		Country:     "Brazil",
-		CountryCode: "BR",
+		Ip:      "34.39.131.22",
+		City:    "Sao Paulo",
+		Country: "Brazil",
 	},
 	{
-		Ip:          "34.240.49.81",
-		City:        "Dublin",
-		Country:     "Ireland",
-		CountryCode: "IE",
+		Ip:      "34.240.49.81",
+		City:    "Dublin",
+		Country: "Ireland",
 	},
 	{
 		Ip:      "35.242.177.6",
@@ -74,9 +68,8 @@ func TestResolveIpAddress(t *testing.T) {
 			t.Errorf(err.Error())
 		}
 
-		// TODO: Finish test
-		fmt.Printf("Country: %s\n", ipInfo.Country)
-		fmt.Printf("City: %s\n", ipInfo.City)
-		fmt.Printf("Country code: %s\n", ipInfo.CountryCode)
+		if ipInfo.Country != testIpAddresses[i].Country {
+			t.Errorf("invalid geolocation data for IP: %s. Expected: %s, got: %s", ipAddr, testIpAddresses[i].Country, ipInfo.Country)
+		}
 	}
 }
