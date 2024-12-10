@@ -18,4 +18,4 @@ curl -X POST http://localhost:3030/signup -d
 ```
 **NOTE**: `X-Forwarded-For` header could be omitted, in that case the IP would be deducted from the request URL, and, what's important, a query to an external service for detecting geolocation will fail with an error `RESERVED_IP_ADDRESS`, since `127.0.0.1` is reserved. You can specify any IP address you want with earlier mentioned header.
 
-Now, you can go to your service and see, from the logs, that a corresponding user with its geolocation data was successfully added to a database.
+Now, you can go to your service and see, from the logs, that a corresponding user with its geolocation data was successfully added to a database.![Screenshot from 2024-12-10 20-23-41](https://github.com/user-attachments/assets/60982ffc-c078-4069-8633-36ac41a3d91c)
