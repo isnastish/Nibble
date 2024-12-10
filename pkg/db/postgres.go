@@ -10,13 +10,11 @@ type PostgresDB struct {
 
 func NewPostgresDB() (*PostgresDB, error) {
 	postgres := &PostgresDB{}
-
 	return postgres, nil
 }
 
 // TODO: Create tables for storing user data
 func (db *PostgresDB) createTables() {
-
 }
 
 // TODO: Close database connection

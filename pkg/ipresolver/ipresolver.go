@@ -40,9 +40,6 @@ func NewClient() (*Client, error) {
 	}, nil
 }
 
-// TODO: This could return a struct with a location and region,
-// or something similiar, but for now let's stick with a string
-// The function should make an http call to external ip service
 func (c *Client) Resolve(ipAddr string) (*IpInfo, error) {
 	req, err := http.NewRequest("GET", fmt.Sprintf("https://api.ipflare.io/%s", ipAddr), nil)
 	if err != nil {
@@ -65,22 +62,11 @@ func (c *Client) Resolve(ipAddr string) (*IpInfo, error) {
 		return nil, fmt.Errorf("Failed to read response body: %s", err.Error())
 	}
 
-	// NOTE: Possible errors
-	// INVALID_IP_ADDRESS	The provided IP address is invalid.
-	// RESERVED_IP_ADDRESS	The provided IP address is reserved and cannot be used.
-	// GEOLOCATION_NOT_FOUND	Geolocation information for the provided IP address could not be found.
-	// QUOTA_EXCEEDED	The request quota has been exceeded.
-	// INTERNAL_SERVER_ERROR	An internal server error occurred.
-	// NO_API_KEY_PROVIDED	No API key was provided in the request.
-	// UNAUTHORIZED	The provided API key is not authorized.
-
 	var ipInfo IpInfo
 	if err := json.Unmarshal(body, &ipInfo); err != nil {
 		return nil, fmt.Errorf("Failed to unmarshal response data: %s", err.Error())
 	}
 
-	// If status code is not equal to 200,
-	// we should return an error message
 	if resp.StatusCode != 200 {
 		return nil, fmt.Errorf("%s %s", ipInfo.ErrorCode, ipInfo.ErrorMsg)
 	}
