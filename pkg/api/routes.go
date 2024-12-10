@@ -31,32 +31,45 @@ func (s *Server) signupRoute(respWriter http.ResponseWriter, req *http.Request) 
 
 	defer req.Body.Close()
 
-	// get user's data
+	// extract user's data
 	var userData UserData
 	if err = json.Unmarshal(body, &userData); err != nil {
 		http.Error(respWriter, fmt.Sprintf("failed to extract user data, error: %s", err), http.StatusInternalServerError)
 		return
 	}
 
-	log.Logger.Info("user data: %v", userData)
-
 	if !validator.ValidateUserPassword(userData.Password) {
-		http.Error(respWriter, "password validation failed", http.StatusInternalServerError)
+		http.Error(respWriter, "password validation failed", http.StatusBadRequest)
 		return
 	}
 
 	if !validator.ValidateUserEmailAddress(userData.Email) {
-		http.Error(respWriter, "email validation failed", http.StatusInternalServerError)
+		http.Error(respWriter, "email validation failed", http.StatusBadRequest)
 		return
 	}
 
-	ip, _, err := net.SplitHostPort(req.RemoteAddr)
-	if err != nil {
-		http.Error(respWriter, fmt.Sprintf("failed to extract IP address: %s", err.Error()), http.StatusInternalServerError)
-		return
+	// NOTE: If X-Forwarded-For header contains an ip address,
+	// use that instead. Otherwise determine ip address
+	// from the request itself. For more information about x-forwarded-for read mozilla docs:
+	// https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Forwarded-For
+	ip := req.Header.Get("X-Forwarded-For")
+	if ip == "" {
+		ip, _, err = net.SplitHostPort(req.RemoteAddr)
+		if err != nil {
+			http.Error(respWriter, fmt.Sprintf("failed to extract IP address: %s", err.Error()), http.StatusInternalServerError)
+			return
+		}
 	}
 
-	log.Logger.Info("ip: %s", ip)
+	// exists, err := s.db.HasUser(userData.Email)
+	// if err != nil { // 	http.Error(respWriter, err.Error(), http.StatusInternalServerError)
+	// 	return
+	// }
+
+	// if exists {
+	// 	http.Error(respWriter, fmt.Sprintf("user with email: %s already exists, try again", userData.Email), http.StatusBadRequest)
+	// 	return
+	// }
 
 	ipInfo, err := s.ipResolverClient.Resolve(ip)
 	if err != nil {

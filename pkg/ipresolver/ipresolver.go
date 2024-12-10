@@ -53,8 +53,6 @@ func (c *Client) Resolve(ipAddr string) (*IpInfo, error) {
 		return nil, err
 	}
 
-	fmt.Println(resp.StatusCode)
-
 	defer resp.Body.Close()
 
 	body, err := io.ReadAll(resp.Body)
