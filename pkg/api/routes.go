@@ -11,17 +11,6 @@ import (
 )
 
 func (s *Server) signupRoute(respWriter http.ResponseWriter, req *http.Request) {
-	/*
-		"Content-Type": application/json
-		"Body"
-		{
-			first_name: "Alexey",
-			last_name: "Yevtushenko",
-			password: isnastish@234,
-			email: isnastish@gmail.com
-		}
-	*/
-
 	body, err := io.ReadAll(req.Body)
 	if err != nil {
 		http.Error(respWriter, "failed to read response body", http.StatusInternalServerError)

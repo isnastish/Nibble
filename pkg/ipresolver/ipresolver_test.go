@@ -1,8 +1,6 @@
 package ipresolver
 
 import (
-	"fmt"
-	"os"
 	"testing"
 
 	_ "github.com/stretchr/testify/assert"
@@ -10,37 +8,30 @@ import (
 
 var testIpAddresses = []*IpInfo{
 	{
-		Ip:          "34.21.9.50",
-		City:        "Washington",
-		Country:     "United States",
-		CountryCode: "US",
+		Ip:      "34.21.9.50",
+		City:    "Washington",
+		Country: "United States",
 	},
 	{
-		Ip:          "34.106.208.213",
-		City:        "Salt Lake City",
-		Country:     "United States",
-		CountryCode: "US",
+		Ip:      "34.106.208.213",
+		City:    "Salt Lake City",
+		Country: "United States",
 	},
 	{
-		Ip:          "34.130.107.20",
-		City:        "Toronto",
-		Country:     "Canada",
-		CountryCode: "CA",
+		Ip:      "34.130.107.20",
+		City:    "Toronto",
+		Country: "Canada",
 	},
 	{
-		Ip:          "34.39.131.22",
-		City:        "Sao Paulo",
-		Country:     "Brazil",
-		CountryCode: "BR",
+		Ip:      "34.39.131.22",
+		City:    "Sao Paulo",
+		Country: "Brazil",
 	},
 	{
-		Ip:          "34.240.49.81",
-		City:        "Dublin",
-		Country:     "Ireland",
-		CountryCode: "IE",
+		Ip:      "34.240.49.81",
+		City:    "Dublin",
+		Country: "Ireland",
 	},
-	// TODO: Add country codes once the plan is updated
-	// since currently we get QUOTA_EXCEEDED error from API server
 	{
 		Ip:      "35.242.177.6",
 		City:    "London",
@@ -64,8 +55,6 @@ var testIpAddresses = []*IpInfo{
 }
 
 func TestResolveIpAddress(t *testing.T) {
-	os.Setenv("IPFLARE_API_KEY", "d4815a7185da6aae.69f941c643a3f41f751fcc9ef59dcfcfed08a00fb57907b4e750a4a1cdbffc3a")
-
 	ipResolverClient, err := NewClient()
 	if err != nil {
 		t.Errorf(err.Error())
@@ -79,8 +68,12 @@ func TestResolveIpAddress(t *testing.T) {
 			t.Errorf(err.Error())
 		}
 
-		fmt.Printf("Country: %s\n", ipInfo.Country)
-		fmt.Printf("City: %s\n", ipInfo.City)
-		fmt.Printf("Country code: %s\n", ipInfo.CountryCode)
+		if ipInfo.Country != testIpAddresses[i].Country {
+			t.Errorf("invalid geolocation data for IP: %s. Expected country: %s, got: %s", ipAddr, testIpAddresses[i].Country, ipInfo.Country)
+		}
+
+		if ipInfo.City != testIpAddresses[i].City {
+			t.Errorf("invalid geolocation data for IP: %s. Expected city: %s, got: %s", ipAddr, testIpAddresses[i].City, ipInfo.City)
+		}
 	}
 }

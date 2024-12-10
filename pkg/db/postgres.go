@@ -13,16 +13,13 @@ import (
 	"github.com/isnastish/nibble/pkg/utils"
 )
 
+// Struct representing Postgres database controller.
 type PostgresDB struct {
 	connPool *pgxpool.Pool
 }
 
 func NewPostgresDB() (*PostgresDB, error) {
 	postgresUrl, set := os.LookupEnv("POSTGRES_URL")
-
-	postgresUrl = "postgres://postgres:password@localhost:5432/postgres?sslmode=disable"
-	set = true
-
 	if !set || postgresUrl == "" {
 		return nil, fmt.Errorf("postgres: postgres_url is not set")
 	}
@@ -58,8 +55,6 @@ func (db *PostgresDB) createTables() error {
 
 	defer conn.Release()
 
-	// we could have devided it into two tables,
-	// but it's not necessary
 	query := `CREATE TABLE IF NOT EXISTS "users" (
 		"id" SERIAL, 
 		"first_name" VARCHAR(64) NOT NULL, 
@@ -78,7 +73,8 @@ func (db *PostgresDB) createTables() error {
 	return nil
 }
 
-// TODO: Documentation
+// Add a new user to the database with its corresponding geolocation data.
+// Return an error if something goes wrong.
 func (db *PostgresDB) AddUser(firstName, lastName, password, email string, ipInfo *ipresolver.IpInfo) error {
 	// NOTE: User data validation should be done in a separate
 	conn, err := db.connPool.Acquire(context.Background())
@@ -104,7 +100,9 @@ func (db *PostgresDB) AddUser(firstName, lastName, password, email string, ipInf
 	return nil
 }
 
-// TODO: Documentation
+// Check if the user with a given email address exists in a database.
+// If so, returns true, false otherwise, and an error if any,
+// usually due to query failures.
 func (db *PostgresDB) HasUser(email string) (bool, error) {
 	conn, err := db.connPool.Acquire(context.Background())
 	if err != nil {
@@ -120,9 +118,9 @@ func (db *PostgresDB) HasUser(email string) (bool, error) {
 	var result string
 	if err := row.Scan(&result); err != nil {
 		if err == pgx.ErrNoRows {
-			// user doesn't exit
 			return false, nil
 		}
+
 		return false, fmt.Errorf("postgres: failed to select user, error: %s", err.Error())
 	}
 
