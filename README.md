@@ -2,6 +2,8 @@
 
 # Running Nibble service
 To boot up a `nibble` service you should have `docker` installed on your machine. When that is done, run `sudo docker compose up --build --force-recreate --no-deps`. That will start one docker container with an actual API service and another one with Postgres database. All the api keys are cofigured inside `compose.yaml`, so you don't need to do anything. If everything went right, you should see the logs:
+![Screenshot from 2024-12-10 20-44-08](https://github.com/user-attachments/assets/488e4864-c894-4b81-a290-bdb8a030431e)
+
 
 # Testing the API
 Once `nibble` service is up and running, we can make queries to its API using any client. In my example I will be utilizing [curl](https://en.wikipedia.org/wiki/CURL).
