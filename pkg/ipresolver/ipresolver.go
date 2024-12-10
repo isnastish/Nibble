@@ -6,6 +6,8 @@ import (
 	"io"
 	"net/http"
 	"os"
+
+	"github.com/isnastish/nibble/pkg/log"
 )
 
 type IpInfo struct {
@@ -68,6 +70,8 @@ func (c *Client) Resolve(ipAddr string) (*IpInfo, error) {
 	if resp.StatusCode != 200 {
 		return nil, fmt.Errorf("%s %s", ipInfo.ErrorCode, ipInfo.ErrorMsg)
 	}
+
+	log.Logger.Info("Got geolocation for IP: %s, city: %s, country: %s", ipAddr, ipInfo.City, ipInfo.Country)
 
 	return &ipInfo, nil
 }

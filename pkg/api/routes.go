@@ -7,7 +7,6 @@ import (
 	"net"
 	"net/http"
 
-	"github.com/isnastish/nibble/pkg/log"
 	"github.com/isnastish/nibble/pkg/validator"
 )
 
@@ -76,8 +75,6 @@ func (s *Server) signupRoute(respWriter http.ResponseWriter, req *http.Request) 
 		http.Error(respWriter, err.Error(), http.StatusInternalServerError)
 		return
 	}
-
-	log.Logger.Info("ip info: %v", ipInfo)
 
 	if err := s.db.AddUser(userData.FirstName, userData.LastName, userData.Password, userData.Email, ipInfo); err != nil {
 		http.Error(respWriter, fmt.Sprintf("failed to add user, error: %s", err.Error()), http.StatusInternalServerError)
