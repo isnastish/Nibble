@@ -127,14 +127,6 @@ func (db *PostgresDB) HasUser(email string) (bool, error) {
 	return true, nil
 }
 
-// TODO: Documentation
-func (db *PostgresDB) GetUsers() {
-	// conn, err := db.connPool.Acquire(context.Background())
-	// if err != nil {
-	// 	return false, err
-	// }
-}
-
 // Close database connection
 func (db *PostgresDB) Close() error {
 	defer db.connPool.Close()
