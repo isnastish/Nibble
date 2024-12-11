@@ -1,6 +1,6 @@
 # Api design
 The core component of the whole system is a `Server` struct.
-It holds a database contoller for persisting user data in an external storage, and a `IP` resolver client for retrieveing user geolocation based on its ip address. 
+It holds a database contoller for persisting user data in an external storage, and an `IP` resolver client for retrieveing user's geolocation based on its ip address. 
 ```go
 type Server struct {
 	// http server
@@ -32,6 +32,14 @@ Here are some examples:
     "34.130.107.20": { "City": "Toronto", "Country": "Canada" },
     "34.39.131.22": { "City": "Sao Paulo", "Country": "Brazil" }
 }
+```
+**NOTE:** For a complete usage example with `curl` take a look at [readme document](/README.md).
+
+The server exposes two public methods, `Serve` which boots up an http server and listens for incoming requests on the specified port, the default is `3030`, and `Shutdown` method, which should be invoked on shutdown of the application. It closes the database connection and does the graceful shutdown. 
+```go
+func (s *Server) Serve() error {}
+
+func (s *Server) Shutdown() error {}
 ```
 
 # Database schema
