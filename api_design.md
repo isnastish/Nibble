@@ -1,6 +1,6 @@
 # Api design
 The core component of the whole system is a `Server` struct.
-It holds a database contoller for persisting user data in an external storage, and an `IP` resolver client for retrieveing user's geolocation based on its ip address. 
+It holds a database contoller for persisting user data in an external storage, and an `IP` resolver client for retrieving user's geolocation based on its ip address. 
 ```go
 type Server struct {
 	// http server
