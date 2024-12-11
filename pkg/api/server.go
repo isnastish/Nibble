@@ -52,7 +52,6 @@ func NewServer(port int) (*Server, error) {
 
 	// bind routes
 	router.HandleFunc("/signup", server.signupRoute).Methods("POST")
-	router.HandleFunc("/users", server.getUsers).Methods("GET")
 
 	server.Server.Handler = router
 
