@@ -76,7 +76,6 @@ func (db *PostgresDB) createTables() error {
 // Add a new user to the database with its corresponding geolocation data.
 // Return an error if something goes wrong.
 func (db *PostgresDB) AddUser(firstName, lastName, password, email string, ipInfo *ipresolver.IpInfo) error {
-	// NOTE: User data validation should be done in a separate
 	conn, err := db.connPool.Acquire(context.Background())
 	if err != nil {
 		return fmt.Errorf("postgres: failed to acquire db connection, error: %s", err.Error())
