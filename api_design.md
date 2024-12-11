@@ -1,7 +1,40 @@
 # Api design
+The core component of the whole system is a `Server` struct.
+It holds a database contoller for persisting user data in an external storage, and a `IP` resolver client for retrieveing user geolocation based on its ip address. 
+```go
+type Server struct {
+	// http server
+	*http.Server
+	// ip resolver client
+	ipResolverClient *ipresolver.Client
+	// database connector
+	db *db.PostgresDB
+	// settings
+	port int
+}
+```
+It exposes a single API endpoint `http://localhost:3030/signup` with a `POST` method. The endpoint accepts user's data in the following form. 
+```json
+{
+ "first_name": "Alexey",
+ "last_name": "Yevtusnenko",
+ "password": "234324@sd22ad",
+ "email": "isnastish@gmail.com"
+}
+```
+If you wish to specify an `IP` address in the request itself, pass the following header: `X-Forwarded-For: "your-IP-address"`. Otherwise, it will be deducted automatically from the `URL`.
+
+**NOTE:**  When running the service locally, the default ip address, deducted from the `URL` would be `127.0.0.1`, which will cause `RESERVED_IP_ADDRESS` when tried to retrieve its geolocation data from an `ipflare` service. In order to avoid that situation and test the application thoroughly, use the earlier mentioned header and pass any ip address you want. 
+Here are some examples: 
+```json
+{
+    "34.21.9.50": { "City": "Washington", "Country": "United States" },
+    "34.130.107.20": { "City": "Toronto", "Country": "Canada" },
+    "34.39.131.22": { "City": "Sao Paulo", "Country": "Brazil" }
+}
+```
 
 # Database schema
-
 For persisting user's data as well as its geolocation information, [Postgres](https://www.postgresql.org/) database was chosen. The database schema is very simple and contains only one table for storing all the data.
 
 ```sql
@@ -51,8 +84,6 @@ For retrieving user's geolocation data based on its `IP` address I have chosen t
 The core structure responsible for communication with an ipflare service is a `Client` holding an `http.Client` instance for making http requests, and an API key string.
 
 ```go
-// A user facing client for interacting with an external
-// service for resolving geolocation.
 type Client struct {
 	// http client
 	*http.Client
@@ -65,10 +96,6 @@ The client has a single public method `GetGeolocationData`, which makes an actua
 The `IpInfo` structure has the following schema:
 
 ```go
-// Struct containing IP's geolocation data
-// retrieved from making a request to external service
-// and parsing its response body.
-// It could contain an optional error code and an error message.
 type IpInfo struct {
 	Ip          string `json:"ip"`
 	City        string `json:"city"`
@@ -90,22 +117,8 @@ If the response status doesn't equal `200`, the `ErrorCode` and `ErrorMsg` field
 On each request, user's email and password are validated using the following functions.
 
 ```go
-// Validate user's password. The password should contain at least 10,
-// and at most 32 characters. It's a simplified version of how
-// password validation could be achieved.
-// Returns true if passowrd is valid, false otherwise.
-func ValidateUserPassword(pwd string) bool {
-    // ...
-}
-
-// Validate user's email address. This is a bare minimum validation
-// which should never be used in a production, but is sufficient for our purposes.
-// Only checks if provided strings contains `@` symbol,
-// if so, returns true, false otherwise.
-// Since writing a complete email validator is not part of this assignment.
-func ValidateUserEmailAddress(email string) bool {
-    // ...
-}
+func ValidateUserPassword(pwd string) bool {}
+func ValidateUserEmailAddress(email string) bool {}
 ```
 
 The validation is oversimplified and not meant to be used in a production, especially email address validator.
