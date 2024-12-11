@@ -63,7 +63,7 @@ func TestResolveIpAddress(t *testing.T) {
 	for i := 0; i < len(testIpAddresses); i++ {
 		ipAddr := testIpAddresses[i].Ip
 
-		ipInfo, err := ipResolverClient.Resolve(ipAddr)
+		ipInfo, err := ipResolverClient.GetGeolocationData(ipAddr)
 		if err != nil {
 			t.Errorf(err.Error())
 		}

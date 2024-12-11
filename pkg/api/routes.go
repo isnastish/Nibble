@@ -66,7 +66,7 @@ func (s *Server) signupRoute(respWriter http.ResponseWriter, req *http.Request) 
 		return
 	}
 
-	ipInfo, err := s.ipResolverClient.Resolve(ip)
+	ipInfo, err := s.ipResolverClient.GetGeolocationData(ip)
 	if err != nil {
 		log.Logger.Error("Failed to get geolocation data: %s", err.Error())
 		http.Error(respWriter, err.Error(), http.StatusInternalServerError)
