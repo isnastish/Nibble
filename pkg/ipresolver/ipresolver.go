@@ -52,7 +52,7 @@ func NewClient() (*Client, error) {
 // Parse its response and retreive geolocation data based on provided
 // ip address.
 // Return an error, if any, otherwise an instance of `IpInfo` containing the necessary information.
-func (c *Client) Resolve(ipAddr string) (*IpInfo, error) {
+func (c *Client) GetGeolocationData(ipAddr string) (*IpInfo, error) {
 	req, err := http.NewRequest("GET", fmt.Sprintf("https://api.ipflare.io/%s", ipAddr), nil)
 	if err != nil {
 		return nil, fmt.Errorf("Failed to create a request: %s", err.Error())
